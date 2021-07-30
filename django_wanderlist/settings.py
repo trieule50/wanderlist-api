@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'corsheaders',
     'djoser',
     'users',
+    'wanderlist',
     'rest_framework',
     'rest_framework.authtoken',
 ]
