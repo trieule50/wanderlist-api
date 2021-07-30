@@ -1,22 +1,6 @@
 from rest_framework import serializers
 from .models import State, Recommendation
 
-class StateSerializer(serializers.HyperlinkedModelSerializer):
-    recommendations = serializers.HyperlinkedRelatedField(
-        view_name='recommendation_detail',
-        many=True,
-        read_only=True
-    )
-
-    state_url = serializers.ModelSerializer.serializer_url_field(
-        view_name='state_detail')
-    owner = serializers.ReadOnlyField(source='owner.username')
-
-    class Meta:
-        model = State
-        fields = ('id', 'name', 'state_flag', 'recommendations',
-                  'state_url', 'owner')
-
 class RecommendationSerializer(serializers.HyperlinkedModelSerializer):
     state = serializers.HyperlinkedRelatedField(
         view_name='state_detail', read_only=True)
@@ -31,5 +15,20 @@ class RecommendationSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = Recommendation
-        fields = ('state', 'state_id', 'title',
+        fields = ('id', 'state', 'state_id', 'title',
                   'body', 'created', 'state_name', 'photo_url', 'owner')
+
+class StateSerializer(serializers.HyperlinkedModelSerializer):
+    recommendations = RecommendationSerializer(
+        many=True,
+        read_only=True
+    )
+
+    state_url = serializers.ModelSerializer.serializer_url_field(
+        view_name='state_detail')
+    owner = serializers.ReadOnlyField(source='owner.username')
+
+    class Meta:
+        model = State
+        fields = ('id', 'name', 'state_flag', 'recommendations',
+                  'state_url', 'owner')
